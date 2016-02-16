@@ -1,7 +1,7 @@
 (defproject
-  flocking "0.1.0-SNAPSHOT"
-  :description "An implementation of flocking behaviors in Clojure"
-  :url "https://github.com/markbastian/flocking"
+  dog-vs-duck "0.1.0-SNAPSHOT"
+  :description "Dog vs. Duck"
+  :url "https://github.com/markbastian/dvd"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
@@ -9,7 +9,7 @@
                  [numerics "0.1.0-SNAPSHOT"]
                  [quil "2.2.6"]]
 
-  :main flocking.launcher
+  :main dvd.launcher
 
   :jar-exclusions [#"\.swp|\.swo|\.DS_Store"]
   :profiles {:uberjar {:aot :all}
@@ -22,6 +22,6 @@
   :clj {:builds [{ :source-paths ["src/clj" "src/cljc" "test"] }]}
 
   :cljsbuild {:builds [{ :source-paths ["src/cljs" "src/cljc"]
-                        :compiler { :output-to "resources/public/js/flocking.js"
+                        :compiler { :output-to "resources/public/js/dvd.js"
                                    :optimizations :advanced
                                    :pretty-print true}}]})

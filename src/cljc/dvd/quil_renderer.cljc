@@ -1,4 +1,4 @@
-(ns flocking.quil-renderer
+(ns dvd.quil-renderer
   (:require [quil.core :as q #?@(:cljs [:include-macros true])]))
 
 (defn debug-wander [{{ {:keys [direction strength rate debug]} :wander } :behaviors }]
@@ -36,7 +36,7 @@
           (apply q/stroke color)
           (q/triangle (- tw) (- th) 0 th tw (- th)))))))
 
-(defn draw [{:keys [world boids]}]
+(defn draw [{:keys [world duck-pos dog-pos]}]
   (let [{ :keys [minx maxx miny maxy] } world
         dx (- maxx minx) dy (- maxy miny)
         max-world-dim (max dx dy)
@@ -48,4 +48,15 @@
       (q/scale 1 -1)
       (q/scale (/ min-screen-dim max-world-dim))
       (q/stroke-weight (/ max-world-dim min-screen-dim 0.5))
-      (doseq [boid boids] (draw-boid boid)))))
+      (q/no-fill)
+      (q/stroke 255 255 0)
+      (q/ellipse 0 0 2 2)
+      (q/with-translation
+        [(first duck-pos) (second duck-pos)]
+        (q/stroke 0 255 255)
+        (q/ellipse 0 0 0.05 0.05))
+      (q/with-translation
+        [(first dog-pos) (second dog-pos)]
+        (q/stroke 255 0 0)
+        (q/ellipse 0 0 0.05 0.05))
+      )))
