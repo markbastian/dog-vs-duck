@@ -15,27 +15,26 @@
      :dt 0.01
      :dog-pos [1.0 0.0 0.0]
      :duck-pos [0.0 0.0 0.0]
-     :duck-vel [0.0 0.0 0.0]
-     :dog-speed 3.8}))
+     :dog-speed 381}))
 
 (defn sim [{:keys [duck-pos dog-pos dog-speed dt] :as state}]
-  (let [direct-time (- 1.0 (mag duck-pos))
+  (let [double-dog-speed (/ dog-speed 100.0)
+        direct-time (- 1.0 (mag duck-pos))
         direct-intersect (normalize duck-pos)
         arclength (Math/acos (dot dog-pos duck-pos))
-        dog-time (/ arclength dog-speed)
+        dog-time (/ arclength double-dog-speed)
         v (if (< direct-time dog-time)
             direct-intersect
             (normalize (sub duck-pos dog-pos)))
         new-duck-pos (add duck-pos (scale v dt))
-        theta (* dt dog-speed)
+        theta (* dt double-dog-speed)
         d (dot duck-pos dog-pos)
         new-dog-pos (if (zero? d)
                       (xform (rotz theta) dog-pos)
                       (xform (rot theta (normalize (cross dog-pos duck-pos))) dog-pos))]
     (into state
           {:dog-pos new-dog-pos
-                 :duck-pos new-duck-pos
-                 :duck-vel v})))
+           :duck-pos (if (> (mag new-duck-pos) 1.1) [0.0 0.0 0.0] new-duck-pos)})))
 
 (defn launch-sketch [{:keys[width height host]}]
   (q/sketch
@@ -44,6 +43,11 @@
     :setup setup
     :draw qr/draw
     :update sim
+    :key-pressed (fn [state {:keys [key]}]
+                   (case key
+                     :up (update state :dog-speed inc)
+                     :down (update state :dog-speed dec)
+                     state))
     :middleware [m/fun-mode]
     :size [width height]))
 
